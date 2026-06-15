@@ -1,276 +1,353 @@
-# Don't Remove Credit @CodeFlix_Bots, @rohit_1888
-# Ask Doubt on telegram @CodeflixSupport
-#
-# Copyright (C) 2025 by Codeflix-Bots@Github, < https://github.com/Codeflix-Bots >.
-#
-# This file is part of < https://github.com/Codeflix-Bots/FileStore > project,
-# and is released under the MIT License.
-# Please see < https://github.com/Codeflix-Bots/FileStore/blob/master/LICENSE >
-#
-# All rights reserved.
-#
-
+from helper.helper_func import *
+from pyrogram import Client, filters
+from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
+import humanize
+from config import MSG_EFFECT, OWNER_ID
+from plugins.shortner import get_short
+from helper.helper_func import get_messages, force_sub, decode, batch_auto_del_notification
 import asyncio
-import os
-import random
-import sys
-import time
-from datetime import datetime, timedelta
-from pyrogram import Client, filters, __version__
-from pyrogram.enums import ParseMode, ChatAction
-from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, ReplyKeyboardMarkup, ChatInviteLink, ChatPrivileges
-from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
-from pyrogram.errors import FloodWait, UserIsBlocked, InputUserDeactivated, UserNotParticipant
-from bot import Bot
-from config import *
-from helper_func import *
-from database.database import *
 
-BAN_SUPPORT = f"{BAN_SUPPORT}"
+#===============================================================#
 
-@Bot.on_message(filters.command('start') & filters.private)
+@Client.on_message(filters.command('start') & filters.private)
+@force_sub
 async def start_command(client: Client, message: Message):
     user_id = message.from_user.id
 
-    # Add user if not already present
-    if not await db.present_user(user_id):
+    # 1. Add user if not present
+    present = await client.mongodb.present_user(user_id)
+    if not present:
         try:
-            await db.add_user(user_id)
-        except:
-            pass
+            await client.mongodb.add_user(user_id)
+        except Exception as e:
+            client.LOGGER(__name__, client.name).warning(f"Error adding a user:\n{e}")
 
-    # Check if user is banned
-    banned_users = await db.get_ban_users()
-    if user_id in banned_users:
-        return await message.reply_text(
-            "<b>⛔️ You are Bᴀɴɴᴇᴅ from using this bot.</b>\n\n"
-            "<i>Contact support if you think this is a mistake.</i>",
-            reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton("Contact Support", url=BAN_SUPPORT)]]
-            )
-        )
-    # ✅ Check Force Subscription
-    if not await is_subscribed(client, user_id):
-        #await temp.delete()
-        return await not_joined(client, message)
+    # 2. Check if banned
+    is_banned = await client.mongodb.is_banned(user_id)
+    if is_banned:
+        return await message.reply("**You have been banned from using this bot!**")
 
-    # File auto-delete time in seconds (Set your desired time in seconds here)
-    FILE_AUTO_DELETE = await db.get_del_timer()  # Example: 3600 seconds (1 hour)
-
-    # Handle normal message flow
     text = message.text
     if len(text) > 7:
         try:
-            base64_string = text.split(" ", 1)[1]
+            original_payload = text.split(" ", 1)[1]
+            base64_string = original_payload
+
+            is_short_link = False
+            if base64_string.startswith("yu3elk"):
+                base64_string = base64_string[6:-1]
+                is_short_link = True
+
         except IndexError:
-            return
+            return await message.reply("Invalid command format.")
 
-        string = await decode(base64_string)
-        argument = string.split("-")
+        # 3. Check premium status
+        is_user_pro = await client.mongodb.is_pro(user_id)
+        
+        # 4. Check if shortner is enabled
+        shortner_enabled = getattr(client, 'shortner_enabled', True)
 
-        ids = []
-        if len(argument) == 3:
+        # 5. If user is not premium AND shortner is enabled, send short URL and return
+        if not is_user_pro and user_id != OWNER_ID and not is_short_link and shortner_enabled:
             try:
-                start = int(int(argument[1]) / abs(client.db_channel.id))
-                end = int(int(argument[2]) / abs(client.db_channel.id))
-                ids = range(start, end + 1) if start <= end else list(range(start, end - 1, -1))
+                short_link = get_short(f"https://t.me/{client.username}?start=yu3elk{base64_string}7", client)
             except Exception as e:
-                print(f"Error decoding IDs: {e}")
-                return
+                client.LOGGER(__name__, client.name).warning(f"Shortener failed: {e}")
+                return await message.reply("Couldn't generate short link.")
 
-        elif len(argument) == 2:
-            try:
-                ids = [int(int(argument[1]) / abs(client.db_channel.id))]
-            except Exception as e:
-                print(f"Error decoding ID: {e}")
-                return
+            short_photo = client.messages.get("SHORT_PIC", "")
+            short_caption = client.messages.get("SHORT_MSG", "")
+            tutorial_link = getattr(client, 'tutorial_link', "https://t.me/How_to_Download_7x/26")
 
-        temp_msg = await message.reply("<b>Please wait...</b>")
+            await client.send_photo(
+                chat_id=message.chat.id,
+                photo=short_photo,
+                caption=short_caption,
+                reply_markup=InlineKeyboardMarkup([
+                    [
+                        InlineKeyboardButton("• ᴏᴘᴇɴ ʟɪɴᴋ", url=short_link),
+                        InlineKeyboardButton("ᴛᴜᴛᴏʀɪᴀʟ •", url=tutorial_link)
+                    ],
+                    [
+                        InlineKeyboardButton(" • ʙᴜʏ ᴘʀᴇᴍɪᴜᴍ •", url="https://t.me/Premium_Fliix/21")
+                    ]
+                ])
+            )
+            return  # prevent sending actual files
+
+        # 6. Decode and prepare file IDs
         try:
-            messages = await get_messages(client, ids)
+            string = await decode(base64_string)
+            argument = string.split("-")
+            ids = []
+            source_channel_id = None
+
+            if len(argument) == 3:
+                # Try to determine source channel from encoded multiplier
+                encoded_start = int(argument[1])
+                encoded_end = int(argument[2])
+                
+                # Try primary channel first
+                primary_multiplier = abs(client.db)
+                start_primary = int(encoded_start / primary_multiplier)
+                end_primary = int(encoded_end / primary_multiplier)
+                
+                # Check if the division results in clean integers (meaning this channel was used for encoding)
+                if encoded_start % primary_multiplier == 0 and encoded_end % primary_multiplier == 0:
+                    source_channel_id = client.db
+                    start = start_primary
+                    end = end_primary
+                    client.LOGGER(__name__, client.name).info(f"Decoded batch from primary channel {source_channel_id}: {start}-{end}")
+                else:
+                    # Try secondary channels
+                    db_channels = getattr(client, 'db_channels', {})
+                    for channel_id_str in db_channels.keys():
+                        channel_id = int(channel_id_str)
+                        channel_multiplier = abs(channel_id)
+                        start_test = int(encoded_start / channel_multiplier)
+                        end_test = int(encoded_end / channel_multiplier)
+                        
+                        if encoded_start % channel_multiplier == 0 and encoded_end % channel_multiplier == 0:
+                            source_channel_id = channel_id
+                            start = start_test
+                            end = end_test
+                            client.LOGGER(__name__, client.name).info(f"Decoded batch from secondary channel {source_channel_id}: {start}-{end}")
+                            break
+                    
+                    # Fallback to primary if no match found
+                    if source_channel_id is None:
+                        source_channel_id = client.db
+                        start = start_primary
+                        end = end_primary
+                
+                ids = range(start, end + 1) if start <= end else list(range(start, end - 1, -1))
+
+            elif len(argument) == 2:
+                # Single message
+                encoded_msg = int(argument[1])
+                
+                # Try primary channel first
+                if hasattr(client, 'db_channel') and client.db_channel:
+                    primary_multiplier = abs(client.db_channel.id)
+                    msg_id_primary = int(encoded_msg / primary_multiplier)
+                    
+                    if encoded_msg % primary_multiplier == 0:
+                        source_channel_id = client.db_channel.id
+                        ids = [msg_id_primary]
+                    else:
+                        # Try secondary channels
+                        db_channels = getattr(client, 'db_channels', {})
+                        for channel_id_str in db_channels.keys():
+                            channel_id = int(channel_id_str)
+                            channel_multiplier = abs(channel_id)
+                            msg_id_test = int(encoded_msg / channel_multiplier)
+                            
+                            if encoded_msg % channel_multiplier == 0:
+                                source_channel_id = channel_id
+                                ids = [msg_id_test]
+                                break
+                        
+                        # Fallback to primary
+                        if source_channel_id is None:
+                            source_channel_id = client.db_channel.id if hasattr(client, 'db_channel') else client.db
+                            ids = [msg_id_primary]
+                else:
+                    # Fallback for legacy compatibility
+                    source_channel_id = client.db
+                    ids = [int(encoded_msg / abs(client.db))]
+
         except Exception as e:
-            await message.reply_text("Something went wrong!")
-            print(f"Error getting messages: {e}")
+            client.LOGGER(__name__, client.name).warning(f"Error decoding base64: {e}")
+            return await message.reply("⚠️ Invalid or expired link.")
+
+        # 7. Get messages from the specific source channel first
+        temp_msg = await message.reply("Wait A Sec..")
+        messages = []
+
+        try:
+            # Try to get messages from the identified source channel first
+            if source_channel_id:
+                client.LOGGER(__name__, client.name).info(f"Trying to get messages from source channel: {source_channel_id}")
+                try:
+                    msgs = await client.get_messages(
+                        chat_id=source_channel_id,
+                        message_ids=list(ids)
+                    )
+                    # Filter out None messages (deleted/not found)
+                    valid_msgs = [msg for msg in msgs if msg is not None]
+                    messages.extend(valid_msgs)
+                    client.LOGGER(__name__, client.name).info(f"Found {len(valid_msgs)} messages from source channel {source_channel_id}")
+                    
+                    # If we didn't get all messages, try the fallback system
+                    if len(valid_msgs) < len(list(ids)):
+                        missing_ids = [mid for mid in ids if mid not in {msg.id for msg in valid_msgs}]
+                        if missing_ids:
+                            client.LOGGER(__name__, client.name).info(f"Missing {len(missing_ids)} messages, trying fallback system")
+                            # Use the fallback system for missing messages
+                            additional_messages = await get_messages(client, missing_ids)
+                            messages.extend(additional_messages)
+                            client.LOGGER(__name__, client.name).info(f"Found {len(additional_messages)} additional messages from fallback")
+                except Exception as e:
+                    client.LOGGER(__name__, client.name).warning(f"Error getting messages from source channel {source_channel_id}: {e}")
+                    # Fallback to the multi-channel system
+                    messages = await get_messages(client, ids)
+            else:
+                client.LOGGER(__name__, client.name).info("No specific source channel identified, using multi-channel fallback")
+                # Use the multi-channel fallback system
+                messages = await get_messages(client, ids)
+        except Exception as e:
+            await temp_msg.edit_text("Something went wrong!")
+            client.LOGGER(__name__, client.name).warning(f"Error getting messages: {e}")
             return
-        finally:
-            await temp_msg.delete()
- 
-        codeflix_msgs = []
+
+        if not messages:
+            return await temp_msg.edit("Couldn't find the files in the database.")
+        await temp_msg.delete()
+
+        yugen_msgs = []
         for msg in messages:
-            caption = (CUSTOM_CAPTION.format(previouscaption="" if not msg.caption else msg.caption.html, 
-                                             filename=msg.document.file_name) if bool(CUSTOM_CAPTION) and bool(msg.document)
-                       else ("" if not msg.caption else msg.caption.html))
-            reply_markup = msg.reply_markup if DISABLE_CHANNEL_BUTTON else None
+            caption = (
+                client.messages.get('CAPTION', '').format(
+                    previouscaption=msg.caption.html if msg.caption else msg.document.file_name
+                ) if bool(client.messages.get('CAPTION', '')) and bool(msg.document)
+                else ("" if not msg.caption else msg.caption.html)
+            )
+            reply_markup = msg.reply_markup if not client.disable_btn else None
+
             try:
                 copied_msg = await msg.copy(
                     chat_id=message.from_user.id,
                     caption=caption,
-                    parse_mode=ParseMode.HTML,
                     reply_markup=reply_markup,
-                    protect_content=PROTECT_CONTENT
+                    protect_content=client.protect
                 )
-                await asyncio.sleep(0.1)
-                codeflix_msgs.append(copied_msg)
+                yugen_msgs.append(copied_msg)
+            except FloodWait as e:
+                await asyncio.sleep(e.x)
+                copied_msg = await msg.copy(
+                    chat_id=message.from_user.id,
+                    caption=caption,
+                    reply_markup=reply_markup,
+                    protect_content=client.protect
+                )
+                yugen_msgs.append(copied_msg)
             except Exception as e:
-                print(f"Failed to send message: {e}")
+                client.LOGGER(__name__, client.name).warning(f"Failed to send message: {e}")
+                pass
 
-        if FILE_AUTO_DELETE > 0:
-            notification_msg = await message.reply(
-                f"<b>Tʜɪs Fɪʟᴇ ᴡɪʟʟ ʙᴇ Dᴇʟᴇᴛᴇᴅ ɪɴ  {get_exp_time(FILE_AUTO_DELETE)}. Pʟᴇᴀsᴇ sᴀᴠᴇ ᴏʀ ғᴏʀᴡᴀʀᴅ ɪᴛ ᴛᴏ ʏᴏᴜʀ sᴀᴠᴇᴅ ᴍᴇssᴀɢᴇs ʙᴇғᴏʀᴇ ɪᴛ ɢᴇᴛs Dᴇʟᴇᴛᴇᴅ.</b>"
-            )
-            reload_url = (
-                f"https://t.me/{client.username}?start={message.command[1]}"
-                if message.command and len(message.command) > 1
-                else None
-            )
-            asyncio.create_task(
-                schedule_auto_delete(client, codeflix_msgs, notification_msg, FILE_AUTO_DELETE, reload_url)
-            )
-    else:
-        reply_markup = InlineKeyboardMarkup(
-            [
-                    [InlineKeyboardButton("• ᴍᴏʀᴇ ᴄʜᴀɴɴᴇʟs •", url="https://t.me/Nova_Flix/50")],
-
-    [
-                    InlineKeyboardButton("• ᴀʙᴏᴜᴛ", callback_data = "about"),
-                    InlineKeyboardButton('ʜᴇʟᴘ •', callback_data = "help")
-
-    ]
-            ]
-        )
-        await message.reply_photo(
-            photo=START_PIC,
-            caption=START_MSG.format(
-                first=message.from_user.first_name,
-                last=message.from_user.last_name,
-                username=None if not message.from_user.username else '@' + message.from_user.username,
-                mention=message.from_user.mention,
-                id=message.from_user.id
-            ),
-            reply_markup=reply_markup,
-            message_effect_id=5104841245755180586)  # 🔥
-        
+        # 8. Auto delete timer
+        if messages and client.auto_del > 0:
+            # Create transfer link for getting files again (original base64_string)
+            transfer_link = original_payload
+            
+            # Start batch auto delete notification - single notification for all files
+            asyncio.create_task(batch_auto_del_notification(
+                bot_username=client.username,
+                messages=yugen_msgs,
+                delay_time=client.auto_del,
+                transfer_link=transfer_link,
+                chat_id=message.from_user.id,
+                client=client
+            ))
         return
 
+    # 9. Normal start message
+    else:
+        buttons = [[InlineKeyboardButton("Help", callback_data="about"), InlineKeyboardButton("Close", callback_data='close')]]
+        if user_id in client.admins:
+            buttons.insert(0, [InlineKeyboardButton("⛩️ ꜱᴇᴛᴛɪɴɢꜱ ⛩️", callback_data="settings")])
 
+        photo = client.messages.get("START_PHOTO", "")
+        start_caption = client.messages.get('START', 'Welcome, {mention}').format(
+            first=message.from_user.first_name,
+            last=message.from_user.last_name,
+            username=None if not message.from_user.username else '@' + message.from_user.username,
+            mention=message.from_user.mention,
+            id=message.from_user.id
+        )
 
-#=====================================================================================##
-# Don't Remove Credit @CodeFlix_Bots, @rohit_1888
-# Ask Doubt on telegram @CodeflixSupport
+        if photo:
+            await client.send_photo(
+                chat_id=message.chat.id,
+                photo=photo,
+                caption=start_caption,
+                message_effect_id=MSG_EFFECT,
+                reply_markup=InlineKeyboardMarkup(buttons)
+            )
+        else:
+            await client.send_message(
+                chat_id=message.chat.id,
+                text=start_caption,
+                message_effect_id=MSG_EFFECT,
+                reply_markup=InlineKeyboardMarkup(buttons)
+            )
+        return
 
+#===============================================================#
 
-
-# Create a global dictionary to store chat data
-chat_data_cache = {}
-
-async def not_joined(client: Client, message: Message):
-    temp = await message.reply("<b><i>ᴡᴀɪᴛ ᴀ sᴇᴄ..</i></b>")
-
+@Client.on_message(filters.command('request') & filters.private)
+async def request_command(client: Client, message: Message):
     user_id = message.from_user.id
-    buttons = []
-    count = 0
+    is_admin = user_id in client.admins  # ✅ Fix this line
+    is_user_premium = await client.mongodb.is_pro(user_id)
 
-    try:
-        all_channels = await db.show_channels()  # Should return list of (chat_id, mode) tuples
-        for total, chat_id in enumerate(all_channels, start=1):
-            mode = await db.get_channel_mode(chat_id)  # fetch mode 
+    if is_admin or user_id == OWNER_ID:
+        await message.reply_text("🔹 **You are my sensei!**\nThis command is only for users.")
+        return
 
-            await message.reply_chat_action(ChatAction.TYPING)
-
-            if not await is_sub(client, user_id, chat_id):
-                try:
-                    # Cache chat info
-                    if chat_id in chat_data_cache:
-                        data = chat_data_cache[chat_id]
-                    else:
-                        data = await client.get_chat(chat_id)
-                        chat_data_cache[chat_id] = data
-
-                    name = data.title
-
-                    # Generate proper invite link based on the mode
-                    if mode == "on" and not data.username:
-                        invite = await client.create_chat_invite_link(
-                            chat_id=chat_id,
-                            creates_join_request=True,
-                            expire_date=datetime.utcnow() + timedelta(seconds=FSUB_LINK_EXPIRY) if FSUB_LINK_EXPIRY else None
-                            )
-                        link = invite.invite_link
-
-                    else:
-                        if data.username:
-                            link = f"https://t.me/{data.username}"
-                        else:
-                            invite = await client.create_chat_invite_link(
-                                chat_id=chat_id,
-                                expire_date=datetime.utcnow() + timedelta(seconds=FSUB_LINK_EXPIRY) if FSUB_LINK_EXPIRY else None)
-                            link = invite.invite_link
-
-                    buttons.append([InlineKeyboardButton(text=name, url=link)])
-                    count += 1
-                    await temp.edit(f"<b>{'! ' * count}</b>")
-
-                except Exception as e:
-                    print(f"Error with chat {chat_id}: {e}")
-                    return await temp.edit(
-                        f"<b><i>! Eʀʀᴏʀ, Cᴏɴᴛᴀᴄᴛ ᴅᴇᴠᴇʟᴏᴘᴇʀ ᴛᴏ sᴏʟᴠᴇ ᴛʜᴇ ɪssᴜᴇs @rohit_1888</i></b>\n"
-                        f"<blockquote expandable><b>Rᴇᴀsᴏɴ:</b> {e}</blockquote>"
-                    )
-
-        # Retry Button
-        try:
-            buttons.append([
-                InlineKeyboardButton(
-                    text='♻️ Tʀʏ Aɢᴀɪɴ',
-                    url=f"https://t.me/{client.username}?start={message.command[1]}"
-                )
-            ])
-        except IndexError:
-            pass
-
-        await message.reply_photo(
-            photo=FORCE_PIC,
-            caption=FORCE_MSG.format(
-                first=message.from_user.first_name,
-                last=message.from_user.last_name,
-                username=None if not message.from_user.username else '@' + message.from_user.username,
-                mention=message.from_user.mention,
-                id=message.from_user.id
-            ),
-            reply_markup=InlineKeyboardMarkup(buttons),
+    if not is_user_premium: 
+        BUTTON_URL = "https://t.me/hanime_arena/5"
+        reply_markup = InlineKeyboardMarkup([
+            [InlineKeyboardButton("💎 Upgrade to Premium", url=BUTTON_URL)]
+        ])
+        await message.reply(
+            "❌ **You are not a premium user.**\nUpgrade to premium to access this feature.",
+            reply_markup=reply_markup
         )
+        return
 
-    except Exception as e:
-        print(f"Final Error: {e}")
-        await temp.edit(
-            f"<b><i>! Eʀʀᴏʀ, Cᴏɴᴛᴀᴄᴛ ᴅᴇᴠᴇʟᴏᴘᴇʀ ᴛᴏ sᴏʟᴠᴇ ᴛʜᴇ ɪssᴜᴇs @rohit_1888</i></b>\n"
-            f"<blockquote expandable><b>Rᴇᴀsᴏɴ:</b> {e}</blockquote>"
+    if len(message.command) < 2:
+        await message.reply("⚠️ **Send me your request in this format:**\n`/request Your_Request_Here`")
+        return
+
+    requested = " ".join(message.command[1:])
+
+    owner_message = (
+        f"📩 **New Request from {message.from_user.mention}**\n\n"
+        f"🆔 User ID: `{user_id}`\n"
+        f"📝 Request: `{requested}`"
+    )
+
+    await client.send_message(OWNER_ID, owner_message)
+    await message.reply("✅ **Thanks for your request!**\nYour request will be reviewed soon. Please wait.")
+
+#===============================================================#
+
+@Client.on_message(filters.command('profile') & filters.private)
+async def my_plan(client: Client, message: Message):
+    user_id = message.from_user.id
+    is_admin = user_id in client.admins  # ✅ Fix here
+
+    if is_admin or user_id == OWNER_ID:
+        await message.reply_text("🔹 You're my sensei! This command is only for users.")
+        return
+    
+    is_user_premium = await client.mongodb.is_pro(user_id)
+
+    if is_user_premium:
+        await message.reply_text(
+            "**👤 Profile Information:**\n\n"
+            "🔸 Ads: Disabled\n"
+            "🔸 Plan: Premium\n"
+            "🔸 Request: Enabled\n\n"
+            "🌟 You're a Premium User!"
         )
-
-#=====================================================================================##
-
-@Bot.on_message(filters.command('commands') & filters.private & admin)
-async def bcmd(bot: Bot, message: Message):        
-    reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton("• ᴄʟᴏsᴇ •", callback_data = "close")]])
-    await message.reply(text=CMD_TXT, reply_markup = reply_markup, quote= True)
-
-async def schedule_auto_delete(client, codeflix_msgs, notification_msg, file_auto_delete, reload_url):
-    await asyncio.sleep(file_auto_delete)
-    for snt_msg in codeflix_msgs:
-        if snt_msg:
-            try:
-                await snt_msg.delete()
-            except Exception as e:
-                print(f"Error deleting message {snt_msg.id}: {e}")
-
-    try:
-        keyboard = InlineKeyboardMarkup(
-            [[InlineKeyboardButton("ɢᴇᴛ ғɪʟᴇ ᴀɢᴀɪɴ!", url=reload_url)]]
-        ) if reload_url else None
-
-        await notification_msg.edit(
-            "<b>ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪꜱ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\nᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ ᴛᴏ ɢᴇᴛ ʏᴏᴜʀ ᴅᴇʟᴇᴛᴇᴅ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ 👇</b>",
-            reply_markup=keyboard
+    else:
+        await message.reply_text(
+            "**👤 Profile Information:**\n\n"
+            "🔸 Ads: Enabled\n"
+            "🔸 Plan: Free\n"
+            "🔸 Request: Disabled\n\n"
+            "🔓 Unlock Premium to get more benefits\n"
+            "Contact: @GetoPro"
         )
-    except Exception as e:
-        print(f"Error updating notification with 'Get File Again' button: {e}")

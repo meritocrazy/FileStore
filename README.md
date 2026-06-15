@@ -1,151 +1,203 @@
 ━━━━━━━━━━━━━━━━━━━━
 
 <h2 align="center">
-    ──「 ғɪʟᴇ sᴛᴏʀᴇ ᴘʀᴏ 」──
+    ──「 ғɪʟᴇ sᴛᴏʀᴇ ᴘʀᴏ - ʙʏ ʏᴀᴛᴏ 」──
 </h2>
 
 <p align="center">
-  <img src="https://graph.org/file/8581e33195ed8183a3253.jpg">
+  <img src="https://camo.githubusercontent.com/6cfe41b279bbe53061fc4591d115038dc36acc593bb6062d0692b8a0810d1bde/68747470733a2f2f74652e6c656772612e70682f66696c652f3066373538333231613932613934323861366334382e6a7067">
 </p>
 
-
-![Typing SVG](https://readme-typing-svg.herokuapp.com/?lines=FILE+SHARING+!;CREATED+BY+CODEFLIX+DEVELOPER!;A+ADVANCE+BOT+WITH+COOL+FEATURE!)
+<p align="center">
+<a href="https://github.com/codeflix-bots/filestore/stargazers"><img src="https://img.shields.io/github/stars/codeflix-bots/filestore?color=black&logo=github&logoColor=black&style=for-the-badge" alt="Stars" /></a>
+<a href="https://github.com/codeflix-bots/filestore/network/members"> <img src="https://img.shields.io/github/forks/codeflix-bots/filestore?color=black&logo=github&logoColor=black&style=for-the-badge" /></a>
+<a href="https://github.com/codeflix-bots/filestore/blob/yato/LICENSE"> <img src="https://img.shields.io/badge/License-MIT-blueviolet?style=for-the-badge" alt="License" /> </a>
+<a href="https://www.python.org/"> <img src="https://img.shields.io/badge/Written%20in-Python-orange?style=for-the-badge&logo=python" alt="Python" /> </a>
+<a href="https://github.com/codeflix-bots/filestore/commits/Noob-Mukesh"> <img src="https://img.shields.io/github/last-commit/codeflix-bots/filestore?color=blue&logo=github&logoColor=green&style=for-the-badge" /></a>
 </p>
 
- ━━━━━━━━━━━━━━━━━
+<p align="center">
+<b>𝗗𝗘𝗣𝗟𝗢𝗬𝗠𝗘𝗡𝗧 𝗠𝗘𝗧𝗛𝗢𝗗𝗦</b>
+</p>
 
-
-
-<details><summary><b>ғᴇᴀᴛᴜʀᴇs:</b></summary>
-
-• <b>Batch & Custom Batch Links:</b> Create links for one or multiple posts easily using <code>/batch</code> & <code>/custom_batch</code>  
-• <b>Link Generator:</b> Instantly generate direct links with <code>/genlink</code>  
-• <b>Broadcast Tools:</b> Send messages or media to all users using <code>/broadcast</code>, <code>/dbroadcast</code>, or <code>/pbroadcast</code>  
-• <b>Auto File Deletion:</b> Control auto-delete with <code>/dlt_time</code> & <code>/check_dlt_time</code>  
-• <b>User Management:</b> Ban/unban users and view banlist via <code>/ban</code>, <code>/unban</code>, and <code>/banlist</code>  
-• <b>Multi Force Subscription:</b> Add, delete, and manage multiple Force Sub channels with <code>/addchnl</code>, <code>/delchnl</code>, <code>/listchnl</code>  
-• <b>Admin Control:</b> Add or remove admins with <code>/add_admin</code>, <code>/deladmin</code>, and view list via <code>/admins</code>  
-
-• <b>Bot Analytics:</b> Get stats and uptime via <code>/stats</code>, user info with <code>/users</code>, and database count via <code>/count</code>  
-• <b>Deployment Ready:</b> Easily deploy on <b>Heroku</b> or <b>Koyeb</b> in minutes  
-
-<b>✨ More features & enhancements coming soon...</b>
-</details>
-
-
-<details><summary><b> ᴠᴀʀɪᴀʙʟᴇs :</b></summary>
-  
-## ᴠᴀʀɪᴀʙʟᴇs
-* `API_HASH` Your API Hash from my.telegram.org
-* `APP_ID` Your API ID from my.telegram.org
-* `TG_BOT_TOKEN` Your bot token from @BotFather
-* `OWNER_ID` Must enter Your Telegram Id
-* `CHANNEL_ID` Your Channel ID eg:- -100xxxxxxxx
-* `DATABASE_URL` Your mongo db url
-* `DATABASE_NAME` Your mongo db session name
-* `ADMINS` Optional: A space separated list of user_ids of Admins, they can only create links
-* `START_MESSAGE` Optional: start message of bot, use HTML and <a href='https://github.com/codeflix-bots/filestore/blob/master/README.md#start_message'>fillings</a>
-* `PROTECT_CONTENT` Optional: True if you need to prevent files from forwarding
-</details>
-
-## 𝐶𝑜𝑚𝑚𝑎𝑛𝑑𝑠
-
-```
-/start - start the bot or get posts
-/batch - create link for more than one posts
-/genlink - create link for one post
-/users - view bot statistics
-/broadcast - broadcast any messages to bot users
-/dbroadcast - broadcast any messages with auto delete.
-/stats - checking your bot uptime
-/start - start the bot or get posts  
-/batch - create link for more than one posts  
-/custom_batch - create custom batch from channel/group  
-/genlink - create link for one post  
-/users - view bot statistics  
-/broadcast - broadcast any messages to bot users  
-/dbroadcast - broadcast any messages with auto delete  
-/stats - check your bot uptime  
-/dlt_time - set auto delete time for files  
-/check_dlt_time - check current delete time setting  
-/ban - ban a user from using the bot  
-/unban - unban a previously banned user  
-/banlist - get list of banned users  
-/addchnl - add a channel for force subscription  
-/delchnl - remove a force subscribe channel  
-/listchnl - view all added force subscribe channels  
-/fsub_mode - toggle force subscribe on or off  
-/pbroadcast - pin a broadcast to all user's chat 
-/add_admin - add a new admin  
-/deladmin - remove an admin  
-/admins - list all current admins  
-/delreq - removed users that left chnl and not getting request fsub
-```
-
-<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif">
-
-<h3>「 ᴏᴛʜᴇʀ ʙʀᴀɴᴄʜᴇs 」
-</h3>
-
-- <b>[ᴛᴏᴋᴇɴ](https://github.com/Codeflix-Bots/FileStore/tree/token)  ➻  [sʜᴏʀᴛɴᴇʀ](https://github.com/Codeflix-Bots/FileStore/tree/Shortner) </b>
-
-<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif">
-
-
-<details>
-<summary><h3>
-- <b> ᴅᴇᴘʟᴏʏᴍᴇɴᴛ ᴍᴇᴛʜᴏᴅs </b>
-</h3></summary>
 <h3 align="center">
     ─「 ᴅᴇᴩʟᴏʏ ᴏɴ ʜᴇʀᴏᴋᴜ 」─
 </h3>
 
-<p align="center"><a href="https://heroku.com/deploy?template=https://github.com/Codeflix-Bots/FileStore">
-  <img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy On Heroku">
-</a></p>
+<p align="center"><a href="https://dashboard.heroku.com/new?template=https://github.com/codeflix-bots/Filestore"> <img src="https://img.shields.io/badge/Deploy%20On%20Heroku-black?style=for-the-badge&logo=heroku" width="220" height="38.45"/></a></p>
+
+
 <h3 align="center">
-    ─「 ᴅᴇᴩʟᴏʏ ᴏɴ ᴋᴏʏᴇʙ 」─
+    ─「 ᴅᴇᴩʟᴏʏ ᴏɴ ᴠᴘs/ʟᴏᴄᴀʟ 」─
 </h3>
-<p align="center"><a href="https://app.koyeb.com/deploy?type=git&repository=github.com/Codeflix-Bots/FileStore&branch=master&name=master">
-  <img src="https://www.koyeb.com/static/images/deploy/button.svg" alt="Deploy On Koyeb">
-</a></p>
-<h3 align="center">
-    ─「 ᴅᴇᴩʟᴏʏ ᴏɴ ʀᴀɪʟᴡᴀʏ 」─
-</h3>
-<p align="center"><a href="https://railway.app/deploy?template=https://github.com/Codeflix-Bots/FileStore">
-     <img height="45px" src="https://railway.app/button.svg">
-</a></p>
-<h3 align="center">
-    ─「 ᴅᴇᴩʟᴏʏ ᴏɴ ʀᴇɴᴅᴇʀ 」─
-</h3>
-<p align="center"><a href="https://render.com/deploy?repo=https://github.com/Codeflix-Bots/FileStore">
-<img src="https://render.com/images/deploy-to-render-button.svg" alt="Deploy to Render">
-</a></p>
-<h3 align="center">
-    ─「 ᴅᴇᴩʟᴏʏ ᴏɴ ᴠᴘs 」─
-</h3>
-<p>
-<pre>
-git clone https://github.com/Codeflix-Bots/FileStore
-# Install Packages
-pip3 install -U -r requirements.txt
-Edit info.py with variables as given below then run bot
-python3 bot.py
-</pre>
-</p>
+
+<details><summary><b> - ғᴇᴀᴛᴜʀᴇs ᴀɴᴅ ᴅᴇᴄʀɪᴘᴛɪᴏɴ:</b></summary>
+  
+## ғᴇᴀᴛᴜʀᴇs
+### ›› ʀᴇǫᴜᴇsᴛ ғᴏʀᴄᴇ sᴜʙ: 
+<i>The most demanding aspect is the Request Force-Sub feature. By enabling Request Force-Sub mode, users are provided with a private channel link along with a join request. This feature adds versatility, allowing for greater flexibility in managing Force-Sub channels based on individual preferences. Additionally, the Request Force-Sub settings offer interactive features that enable more advanced and reliable operations.</i>
+
+### ›› ᴄᴜsᴛᴏᴍ ғᴏʀᴄᴇ sᴜʙ: 
+<i>You can add one or multiple force-sub channels—there's no limit to the number you can add. You can also empty the list by deleting all force-sub channels. This feature provides versatility, allowing you to create a custom number of force-sub channels according to your preference.</i>
+
+### ›› ᴀᴅᴅ ᴍᴜʟᴛɪ ᴀᴅᴍɪɴs: 
+<i>You can add one or multiple admins by providing their user IDs, and you can also remove all admins if needed. Admins have access to some useful bot commands but do not have access to all commands.</i>
+
+### ›› ʙᴀɴ-ᴜɴʙᴀɴ: 
+<i>You can add user IDs to a banned list, preventing those who annoy you or spam the bot from using it. They will be unable to access the bot until you remove them from the banned list.</i>
+
+### ›› ᴀᴜᴛᴏ ᴅᴇʟᴇᴛᴇ: 
+<i>This feature is crucial for protecting the bot from copyright strikes and reducing the risk of being banned from Telegram. It includes two options: first, you can enable or disable the auto-delete mode; second, you can set a timer, so files will be automatically deleted after a specified period. After that it also send a message that shows the "previous message was deleted" and provide the link to retrieve again the same files.</i>
+
+### ›› ᴄᴏɴᴛᴇɴᴛ ʙᴜᴛᴛᴏɴ: 
+<i>This feature allows you to add customizable buttons to files shared by the bot. Every file shared by the bot will have a button, which you can tailor to meet your specific needs.</i>
+
+### ›› sᴇᴛ ʙᴜᴛᴛᴏɴ: 
+<i>This feature allows you to customize the content buttons on files shared by the bot. For example, you can set the button name and link. You could create a button labeled "Join Channel," which will appear on the files and contain a specific link provided by you.</i>
+
+### ›› ʜɪᴅᴇ ᴄᴀᴘᴛɪᴏɴ ᴀɴᴅ ᴘʀᴏᴛᴇᴄᴛ ᴄᴀᴘᴛɪᴏɴ:
+<i>The "Hide Caption" feature allows you to remove the caption from shared files, while the "Protect Content" feature secures the files. If you enable "Protect Content," the files cannot be forwarded by users.</i>
+
+### ›› sᴛᴀʀᴛ & ғsᴜʙ ᴍᴇᴅɪᴀ:
+<i>ᴘʀᴏᴠɪᴅᴇ ɪᴍᴀɢᴇ ᴜʀʟs ᴏʀ ᴅɪʀᴇᴄᴛʟʏ sᴇɴᴅ ᴘʜᴏᴛᴏs ᴛᴏ ᴄᴜsᴛᴏᴍɪᴢᴇ ᴛʜᴇ sᴛᴀʀᴛ ᴀɴᴅ ꜰᴏʀᴄᴇ sᴜʙsᴄʀɪʙᴇ ᴍᴇssᴀɢᴇs.</i>
+
+### ›› ꜰᴜʟʟʏ ᴇᴅɪᴛᴀʙʟᴇ ᴍᴇssᴀɢᴇs:
+<i>ᴄᴜsᴛᴏᴍɪᴢᴇ sᴛᴀʀᴛ, ᴀʙᴏᴜᴛ, ʀᴇᴘʟʏ, ᴀɴᴅ ғsᴜʙ ᴍᴇssᴀɢᴇs ᴡɪᴛʜ ꜰᴏʀᴍᴀᴛᴛɪɴɢ ᴀɴᴅ ᴘʟᴀᴄᴇʜᴏʟᴅᴇʀs (sᴇᴇ ʙᴇʟᴏᴡ)..</i>
+
+### ›› ᴄᴜsᴛᴏᴍ ᴜʀʟ sʜᴏʀᴛᴇɴᴇʀ:
+<i>ᴀᴅᴅ ʏᴏᴜʀ ꜱʜᴏʀᴛᴇɴᴇʀ ᴜʀʟ, ᴀᴘɪ ᴋᴇʏꜱ, ᴀɴᴅ ᴅɪʀᴇᴄᴛ ᴛᴇʟᴇɢʀᴀᴍ ᴛᴜᴛᴏʀɪᴀʟ ʟɪɴᴋꜱ ꜰᴏʀ ᴇᴀꜱʏ ᴄᴏɴꜰɪɢᴜʀᴀᴛɪᴏɴ...</i>
+
+### <i>›› In addition to the above, more user-friendly and advanced interaction features have been added.</i>
 </details>
 
-<h3>「 ᴄʀᴇᴅɪᴛs 」
+<details><summary><b> - ᴀᴅᴍɪɴ ᴀɴᴅ ᴜsᴇʀs ᴄᴏᴍᴍᴀɴᴅs :</b></summary>
+  
+## ᴀᴅᴍɪɴ ᴀɴᴅ ᴜsᴇʀs ᴄᴏᴍᴍᴀɴᴅs
+- **start** - sᴛᴀʀᴛ ᴛʜᴇ ʙᴏᴛ
+- **shortner** - sʜᴏʀᴛɴᴇʀ sᴇᴛᴛɪɴɢs
+- **users** - ᴠɪᴇᴡ ᴛʜᴇ ᴜsᴇʀs ʟɪsᴛ
+- **broadcast** - sᴇɴᴅ ᴀ ᴍᴇssᴀɢᴇ ᴛᴏ ᴀʟʟ ᴜsᴇʀs
+- **batch** - sᴇɴᴅ ᴍᴇssᴀɢᴇs ɪɴ ʙᴀᴛᴄʜᴇs
+- **genlink** - ɢᴇɴᴇʀᴀᴛᴇ ᴀ ʟɪɴᴋ
+- **usage** - ᴄʜᴇᴄᴋ ʟɪɴᴋ ᴜsᴀɢᴇ
+- **pbroadcast** - sᴇɴᴅ ᴘʀᴇᴍɪᴜᴍ ᴍᴇssᴀɢᴇ ᴛᴏ ᴜsᴇʀs
+- **ban** - ʙᴀɴ ᴀ ᴜsᴇʀ
+- **unban** - ᴜɴʙᴀɴ ᴀ ᴜsᴇʀ
+- **addpremium** - ᴀᴅᴅ ᴘʀᴇᴍɪᴜᴍ ᴜsᴇʀ
+- **delpremium** - ʀᴇᴍᴏᴠᴇ ᴘʀᴇᴍɪᴜᴍ ᴜsᴇʀ
+- **premiumusers** - ᴠɪᴇᴡ ᴀʟʟ ᴘʀᴇᴍɪᴜᴍ ᴜsᴇʀs
+- **request** - sᴇɴᴅ ᴀ ʀᴇǫᴜᴇsᴛ
+- **profile** - ᴠɪᴇᴡ ᴜsᴇʀ ᴘʀᴏғɪʟᴇ
+
+- **db** - db channel configs
+- **adddb** - add primary & secondary db channel
+- **removedb** - to remove db channel.
+</details>
+
+<details><summary><b> - ᴠᴀʀɪᴀʙʟᴇs :</b></summary>
+  
+## ᴠᴀʀɪᴀʙʟᴇs
+
+```python
+# Bot Instance Configuration
+SESSION = "your_session_name"
+TOKEN = "your_bot_token"
+API_ID = your_api_id
+API_HASH = "your_api_hash"
+WORKERS = 5
+
+# Database Configuration
+DB_URI = "your_mongodb_uri"
+DB_NAME = "your_database_name"
+
+# Force Subscription Channels [channel_id, request_enabled, timer_in_minutes]
+FSUBS = [[-1001234567890, True, 10]]
+
+# Database Channel
+DB_CHANNEL = -1001234567890
+
+# Auto Delete Timer (seconds)
+AUTO_DEL = 300
+
+# Admin IDs
+ADMINS = [123456789, 987654321]
+
+# Bot Settings
+DISABLE_BTN = True
+PROTECT = True
+
+# Messages Configuration
+MESSAGES = {
+    "START": "Your start message here with {first} placeholder",
+    "FSUB": "Your force subscription message",
+    "ABOUT": "About message",
+    # ... other messages
+}
+```
+</details>
+
+<details>
+<summary><h3>
+- <b> ᴠᴘs/ʟᴏᴄᴀʟ ᴅᴇᴘʟᴏʏᴍᴇɴᴛ ᴍᴇᴛʜᴏᴅ </b>
+</h3></summary>
+
+- Get your [Necessary Variables](https://github.com/Codeflix-Bots/filestore/blob/yato/config.py)
+- git clone https://github.com/Codeflix-Bots/filestore
+- # Install Packages
+- pip3 install -U -r requirements.txt
+- Edit config.py with variables as given below then run bot
+- python3 main.py
+
+<p align="center">
+  <img src="https://graph.org/file/c7727a6d27332ffcd8f03.jpg">
+</p>
+
+
+</details>
+━━━━━━━━━━━━━━━━━━━━
+
+<h3 align="center">
+    ─「 sᴜᴩᴩᴏʀᴛ 」─
 </h3>
 
-- <b>[ᴄᴏᴅᴇғʟɪx ʙᴏᴛs](https://t.me/codeflix_bots)  ➻  [ᴜᴘᴅᴀᴛᴇs](https://t.me/codeflix_bots) </b>
-- <b>[ʏᴀᴛᴏ](https://github.com/sewxiy)  ➻  [sᴏᴍᴇᴛʜɪɴɢ](https://t.me/cosmic_freak) </b>
-- <b>[ʀᴏʜɪᴛ](https://github.com/rohit3607)  ➻  [sᴏᴍᴇᴛʜɪɴɢ](https://t.me/FILE_SHARINGBOTS/17) </b>
- 
-<b>ᴀɴᴅ ᴀʟʟ [ᴛʜᴇ ᴄᴏɴᴛʀɪʙᴜᴛᴏʀs](https://telegram.me/codeflix-bots) ᴡʜᴏ ʜᴇʟᴩᴇᴅ ɪɴ ᴍᴀᴋɪɴɢ file store ʙᴏᴛ ᴜsᴇꜰᴜʟ & ᴩᴏᴡᴇʀꜰᴜʟ 🖤 </b>
+<p align="center">
+<a href="https://telegram.me/codeflixsupport"><img src="https://img.shields.io/badge/-Support%20Group-blue.svg?style=for-the-badge&logo=Telegram"></a>
+</p>
+<p align="center">
+<a href="https://telegram.me/codeflix_bots"><img src="https://img.shields.io/badge/-Support%20Channel-blue.svg?style=for-the-badge&logo=Telegram"></a>
+</p>
 
-## 📌  𝑵𝒐𝒕𝒆
+━━━━━━━━━━━━━━━━━━━━
 
-ᴊᴜꜱᴛ ꜰᴏʀᴋ ᴛʜᴇ ʀᴇᴘᴏ ᴀɴᴅ ᴇᴅɪᴛ ᴀꜱ ᴘᴇʀ ʏᴏᴜʀ ɴᴇᴇᴅꜱ.
+<h3 align="center">
+    ─「 ᴄʀᴇᴅɪᴛs 」─
+</h3>
 
-<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif">
+- <b>[ʏᴀᴛᴏ](https://github.com/Codeflix-Bots)  ➻  [sᴏᴍᴇᴛʜɪɴɢ](https://github.com/proyato) </b>
+- <b>[ᴠᴏᴀᴛ](https://github.com/Codeflix-Bots)  ➻  [ʙᴀsᴇ ʀᴇᴘᴏ](https://github.com/ArihantSharma/FileStoreBot) </b>
+
+<h3 align="center">
+<b>🤝 ᴄᴏɴᴛʀɪʙᴜᴛɪɴɢ
+ᴄᴏɴᴛʀɪʙᴜᴛɪᴏɴs ᴀʀᴇ ᴀʟᴡᴀʏs ᴡᴇʟᴄᴏᴍᴇ! ꜰᴇᴇʟ ꜰʀᴇᴇ ᴛᴏ ᴏᴘᴇɴ ᴘᴜʟʟ ʀᴇǫᴜᴇsᴛs ᴛᴏ ɪᴍᴘʀᴏᴠᴇ ᴛʜɪs ʀᴇᴘᴏ 🖤 </b>
+</h3>
+
+# 📝 ʟɪᴄᴇɴsᴇ
+›› ʏᴏᴜ ᴄᴀɴ ꜰʀᴇᴇʟʏ ʜᴏsᴛ ᴛʜɪs ʀᴇᴘᴏ ʏᴏᴜʀsᴇʟꜰ. ᴀʟʟ ᴡᴇ ᴀsᴋ ɪs ᴛʜᴀᴛ ʏᴏᴜ ᴘʀᴏᴠɪᴅᴇ ᴘʀᴏᴘᴇʀ ᴄʀᴇᴅɪᴛs ʙʏ ʟɪɴᴋɪɴɢ ᴛᴏ ᴛʜɪs ʀᴇᴘᴏsɪᴛᴏʀʏ.
+
+›› ᴛʜɪs ᴘʀᴏᴊᴇᴄᴛ ɪs ʟɪᴄᴇɴsᴇᴅ ᴜɴᴅᴇʀ ᴛʜᴇ ɢɴᴜ ɢᴇɴᴇʀᴀʟ ᴘᴜʙʟɪᴄ ʟɪᴄᴇɴsᴇ ᴠ3.0 (ɢᴘʟᴠ3).
+ʏᴏᴜ ᴀʀᴇ ꜰʀᴇᴇ ᴛᴏ ᴜsᴇ, ᴍᴏᴅɪꜰʏ, ᴀɴᴅ sʜᴀʀᴇ ɪᴛ — ʙᴜᴛ ʏᴏᴜ ᴍᴜsᴛ ᴀʟsᴏ ɢɪᴠᴇ ᴄʀᴇᴅɪᴛ ᴀɴᴅ ᴋᴇᴇᴘ ɪᴛ ᴜɴᴅᴇʀ ᴛʜᴇ ɢᴘʟ ʟɪᴄᴇɴsᴇ.
+
+
+━━━━━━━━━━━━━━━━━━━━
+
+
+
+
+
+
+
+
+
+
+
+
